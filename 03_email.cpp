@@ -11,10 +11,12 @@ int main() {
 
     //std::cout<< space << std::endl;
 
-    if(name.empty()){
+    while(name.empty()){
         std::cout << "Please enter valid name" << std::endl;
+        std::getline (std::cin, name);
     }
-    else if(space==-1){
+
+    if(space==-1){
         std::cout << "Your Id is " << name.append("@gmail.com");
     } 
     else{
