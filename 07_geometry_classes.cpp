@@ -1,22 +1,23 @@
 #include <iostream>
 #include <memory>
+#include <cmath>
 
 class AbstractFigure {
     public:
-    virtual void circumference() = 0;
-    virtual void area() = 0;
-    void print_circumference(double circumference)
+    virtual double circumference() = 0;
+    virtual double area() = 0;
+    void print_circumference()
     {
-        std::cout << "Circumference is equal to " << circumference << std::endl;
+        std::cout << "Circumference is equal to " << circumference() << std::endl;
     };
-    void print_area(double area)
+    void print_area()
     {
-        std::cout << "Area is equal to " << area << std::endl;
+        std::cout << "Area is equal to " << area() << std::endl;
     }
 
 };
 
-class Circle : AbstractFigure 
+class Circle : public AbstractFigure 
 {
     public:
     double radius;
@@ -26,20 +27,18 @@ class Circle : AbstractFigure
         this->radius = radius;
     }
     
-    void circumference() 
+    double circumference() 
     {
-        double circumference = 2 * 3.14 * radius;
-        print_circumference(circumference);
+        return 2 * 3.14 * radius;
     }
 
-    void area() 
+    double area() 
     {
-        double area = 3.14 * radius * radius;
-        print_area(area);
+        return 3.14 * radius * radius;
     }
 };
 
-class Square : AbstractFigure 
+class Square : public AbstractFigure 
 {
     public:
     double length;
@@ -49,19 +48,39 @@ class Square : AbstractFigure
         this->length = length;
     }
 
-    void circumference() 
+    double circumference() 
     {
-        double circumference = 4 * length;
-        print_circumference(circumference);
+        return 4 * length;
     }
 
-    void area() 
+    double area() 
     {
-        double area = length * length;
-        print_area(area);
+        return length * length;
     }
 };
 
+class Triangle : public AbstractFigure 
+{
+    public:
+    double a;
+    double b;
+    double c;
+
+    Triangle(double a, double b, double c)
+    {
+        this->a = a;
+        this->b = b;
+        this->c = c;
+    }
+ 
+    double circumference(){
+        return a+ b +c;
+    }
+    double area() {
+        double p = circumference() / 2;
+        return sqrt(p*(p-a)*(p-b)*(p-c));
+    }
+};
 
 int main() 
 {
@@ -69,13 +88,15 @@ int main()
     Circle circle2 = Circle(5);
     Square square1 = Square(6);
     Square square2 = Square(2);
+    Triangle triangle1 = Triangle(3,4,5);
 
-    circle1.circumference();
-    circle1.area();
+    circle1.print_circumference();
+    circle1.print_area();
 
-    square1.circumference();
-    square1.area();
+    square1.print_circumference();
+    square1.print_area();
 
+    triangle1.print_area();
 
     return 0;
 }
