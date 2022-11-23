@@ -3,20 +3,22 @@
 
 int main() 
 {
-    for(int i = 2; i <= 10; i++) 
+    std::vector<int> primes;
+
+    for(int i = 2; i <= 100000; i++) 
     {
         bool is_prime = true;
-        for(int j = 2; j < i; j++){
-            if(i % j == 0){
+        for(int prime : primes){
+            if(i % prime == 0)
+            {
                 is_prime = false;
                 break;
             }
         }
 
-        if(is_prime == false){
-            //std::cout << i << "is not a prime number" << std::endl;
-        }
-        else{
+        if(is_prime)
+        { 
+            primes.emplace_back(i);
             std::cout << i << " is a prime number" << std::endl;
         }
     }
