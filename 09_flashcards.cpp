@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <ctime>
 
 class Flashcard {
     public:
@@ -17,6 +18,8 @@ class Flashcard {
         this->usage = usage;
     }
 };
+
+void learning(std::vector<Flashcard> cards);
 
 int main() 
 {
@@ -40,10 +43,10 @@ int main()
     auto rng = std::default_random_engine { rd() };
     std::shuffle(std::begin(cards), std::end(cards), rng);
  
-    for(auto card : cards)
+    /* for(auto card : cards)
     {
         std::cout << card.word << std::endl;
-    }
+    } */
 
     /* for(int i = 0; i < cards.size(); i++)
     {
@@ -52,6 +55,44 @@ int main()
 
     //std::cout << "Choose one of the following options: " << std::endl;
 
+
+    std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
+
+    learning(cards);
+
     return 0;
 }
 
+void learning(std::vector<Flashcard> cards)
+{   
+    for(int i = 0; i < cards.size();)
+    {
+        std::cout << "                                  " << cards[i].word << std::endl << std::endl;
+        std::cout << "1 see translation    2 see usage    3 already known   4 next word     Q quit"<< std::endl;
+
+        char choice;
+        std::cin >> choice;
+
+        switch (choice)
+        {
+        case '1':
+            std::cout << "You see a translation" << std::endl;
+            break;
+        case '2':
+            std::cout << cards[i].usage << std::endl << std::endl;
+            break;
+        case '3':
+            i++;
+            break;
+        case '4':
+            i++;
+            break;
+        case 'q':
+        case 'Q':
+            i = cards.size();
+            break;
+        default:
+            break;
+        }
+    }
+}
