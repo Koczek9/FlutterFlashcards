@@ -9,13 +9,21 @@ class Flashcard {
     public:
     std::string word;
     std::string usage;
+    std::string translation;
 
-    Flashcard(std::string word, std::string usage){
+    Flashcard(std::string word, std::string usage, std::string translation)
+    {
         int colon = word.find(':');
         word = word.substr(colon + 1);
         std::transform(word.begin(), word.end(), word.begin(), tolower);
         this->word = word;
         this->usage = usage;
+        this->translation = translation;
+    }
+
+    Flashcard(std::string word, std::string usage) : Flashcard(word,usage, std::string())
+    {
+
     }
 };
 
@@ -27,36 +35,26 @@ int main()
     std::vector<Flashcard> cards;
 
     //Read from the text file
-    std::ifstream flashcards ("flashcards.csv");
+    std::ifstream flashcards ("flashcards4.csv");
 
     while (getline (flashcards, line))
     {
       int position = line.find('\t');
+      std::string translation = line.substr(0,position);
+      line = line.substr(position + 1);
+      position = line.find('\t');
       std::string usage = line.substr(position + 1);
       std::string word = line.substr(0,position);
 
-      cards.emplace_back(Flashcard(word, usage));
+      cards.emplace_back(Flashcard(word, usage, translation));
     }
     
     //shuffle cards
     auto rd = std::random_device {}; 
     auto rng = std::default_random_engine { rd() };
     std::shuffle(std::begin(cards), std::end(cards), rng);
- 
-    /* for(auto card : cards)
-    {
-        std::cout << card.word << std::endl;
-    } */
-
-    /* for(int i = 0; i < cards.size(); i++)
-    {
-        std::cout << cards[i].usage << std::endl;
-    } */
 
     //std::cout << "Choose one of the following options: " << std::endl;
-
-
-    std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
 
     learning(cards);
 
@@ -65,6 +63,8 @@ int main()
 
 void learning(std::vector<Flashcard> cards)
 {   
+    std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
+    
     for(int i = 0; i < cards.size();)
     {
         std::cout << "                                  " << cards[i].word << std::endl << std::endl;
@@ -76,7 +76,7 @@ void learning(std::vector<Flashcard> cards)
         switch (choice)
         {
         case '1':
-            std::cout << "You see a translation" << std::endl;
+            std::cout << cards[i].translation << std::endl;
             break;
         case '2':
             std::cout << cards[i].usage << std::endl << std::endl;
