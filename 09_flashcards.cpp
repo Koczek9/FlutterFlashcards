@@ -5,6 +5,8 @@
 #include <random>
 #include <ctime>
 
+std::string find(std::string sentence, std::string word);
+
 class Flashcard {
     public:
     std::string word;
@@ -25,6 +27,30 @@ class Flashcard {
     {
 
     }
+
+    Flashcard(std::string serializedItem)
+    {
+        deserialize(serializedItem);
+    }
+
+    public:
+    std::string serialize()
+    {
+        std::string serialize;
+        serialize += "<Flashcard>\n";
+        serialize += "    <word>" + word + "</word>\n";
+        serialize += "    <usage>" + usage + "</usage>\n";
+        serialize += "    <translation>" + translation + "</translation>\n";
+        serialize += "</Flashcard>\n";
+        return serialize;
+    }
+
+    void deserialize(std::string serialize)
+    {
+        word = find(serialize, "word");
+        usage = find(serialize, "usage");
+        translation = find(serialize, "translation");
+    }
 };
 
 void learning(std::vector<Flashcard> cards);
@@ -35,7 +61,7 @@ int main()
     std::vector<Flashcard> cards;
 
     //Read from the text file
-    std::ifstream flashcards ("flashcards4.csv");
+    /* std::ifstream flashcards ("flashcards4.csv");
 
     while (getline (flashcards, line))
     {
@@ -47,18 +73,65 @@ int main()
       std::string word = line.substr(0,position);
 
       cards.emplace_back(Flashcard(word, usage, translation));
+    } */
+
+    std::string fullFile;
+    std::ifstream flashcards ("flashcardsJSON.json");
+    while (getline (flashcards, line))
+    {
+        fullFile += line;
     }
-    
+
+    bool working = true;
+    while(working)
+    {
+        std::string card = find(fullFile, "Flashcard");
+        if (card.empty())
+        {
+            working = false;
+            break;
+        }
+        cards.emplace_back(Flashcard(card));
+        int position2 = fullFile.find("</Flashcard>");
+        fullFile = fullFile.substr(position2 +1);
+    }
+
+    //Write to the json file
+    /* std::ofstream MyFileWrite ("flashcardsJSON.json");
+
+    for(auto card : cards)
+    {
+        MyFileWrite << card.serialize();
+    }
+
+    MyFileWrite.close (); */
+
+
+
     //shuffle cards
-    auto rd = std::random_device {}; 
+    /* auto rd = std::random_device {}; 
     auto rng = std::default_random_engine { rd() };
-    std::shuffle(std::begin(cards), std::end(cards), rng);
+    std::shuffle(std::begin(cards), std::end(cards), rng); */
 
     //std::cout << "Choose one of the following options: " << std::endl;
 
     learning(cards);
 
+    //std::cout << cards[0].serialize();
+
     return 0;
+}
+
+std::string find(std::string sentence, std::string word)
+{   
+    int position1 = sentence.find("<" + word + ">");
+    int position2 = sentence.find("</" + word + ">");
+
+    if (position1 < 0 || position2 < 0)
+    {
+        return std::string();
+    }
+    return sentence.substr(position1 + word.length() + 2, position2 - position1 - word.length() - 2);
 }
 
 void learning(std::vector<Flashcard> cards)
