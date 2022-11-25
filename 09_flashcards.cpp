@@ -8,6 +8,7 @@
 std::string find(std::string sentence, std::string word);
 
 class Flashcard {
+    std::string known = "false";
     public:
     std::string word;
     std::string usage;
@@ -33,7 +34,6 @@ class Flashcard {
         deserialize(serializedItem);
     }
 
-    public:
     std::string serialize()
     {
         std::string serialize;
@@ -41,6 +41,7 @@ class Flashcard {
         serialize += "    <word>" + word + "</word>\n";
         serialize += "    <usage>" + usage + "</usage>\n";
         serialize += "    <translation>" + translation + "</translation>\n";
+        serialize += "    <known>" + known + "</known>\n";
         serialize += "</Flashcard>\n";
         return serialize;
     }
@@ -50,7 +51,32 @@ class Flashcard {
         word = find(serialize, "word");
         usage = find(serialize, "usage");
         translation = find(serialize, "translation");
+        known = find(serialize, "known");
     }
+
+    void setKnown(bool isKnown)
+    {
+        if(isKnown)
+        {
+            known = "true";
+        }
+        else 
+        {
+            known = "false";
+        }
+    }
+
+    bool getKnown()
+    {
+        bool isKnown = 0;
+        if(known == "true")
+        {
+            isKnown = 1;
+        }
+        return isKnown;
+    }
+
+
 };
 
 void learning(std::vector<Flashcard> cards);
@@ -76,11 +102,13 @@ int main()
     } */
 
     std::string fullFile;
-    std::ifstream flashcards ("flashcardsJSON.json");
-    while (getline (flashcards, line))
+    std::ifstream MyFileRead ("flashcardsJSON.json");
+    while (getline (MyFileRead, line))
     {
         fullFile += line;
     }
+
+    MyFileRead.close ();
 
     bool working = true;
     while(working)
@@ -96,17 +124,6 @@ int main()
         fullFile = fullFile.substr(position2 +1);
     }
 
-    //Write to the json file
-    /* std::ofstream MyFileWrite ("flashcardsJSON.json");
-
-    for(auto card : cards)
-    {
-        MyFileWrite << card.serialize();
-    }
-
-    MyFileWrite.close (); */
-
-
 
     //shuffle cards
     /* auto rd = std::random_device {}; 
@@ -116,6 +133,9 @@ int main()
     //std::cout << "Choose one of the following options: " << std::endl;
 
     learning(cards);
+
+    
+
 
     //std::cout << cards[0].serialize();
 
@@ -155,6 +175,7 @@ void learning(std::vector<Flashcard> cards)
             std::cout << cards[i].usage << std::endl << std::endl;
             break;
         case '3':
+            cards[i].setKnown(true);
             i++;
             break;
         case '4':
@@ -168,4 +189,14 @@ void learning(std::vector<Flashcard> cards)
             break;
         }
     }
+    
+     //Write to the json file
+    std::ofstream MyFileWrite ("flashcardsJSON.json");
+
+    for(auto card : cards)
+    {
+        MyFileWrite << card.serialize();
+    }
+
+    MyFileWrite.close ();
 }
