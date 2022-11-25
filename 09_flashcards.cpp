@@ -142,6 +142,7 @@ int main()
     return 0;
 }
 
+//Function that finds word keys in read file.
 std::string find(std::string sentence, std::string word)
 {   
     int position1 = sentence.find("<" + word + ">");
@@ -158,21 +159,35 @@ void learning(std::vector<Flashcard> cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
     
+    bool showWord = true;
     for(int i = 0; i < cards.size();)
-    {
-        std::cout << "                                  " << cards[i].word << std::endl << std::endl;
+    {   
+        if(cards[i].getKnown())
+        {
+            i++;
+            continue;
+        }
+        
+        if(showWord)
+        {
+            std::cout << "                                  " << cards[i].word << std::endl << std::endl;
+        }
+        
         std::cout << "1 see translation    2 see usage    3 already known   4 next word     Q quit"<< std::endl;
 
         char choice;
         std::cin >> choice;
+        showWord = true;
 
         switch (choice)
         {
         case '1':
             std::cout << cards[i].translation << std::endl;
+            showWord = false;
             break;
         case '2':
             std::cout << cards[i].usage << std::endl << std::endl;
+            showWord = false;
             break;
         case '3':
             cards[i].setKnown(true);
@@ -189,8 +204,8 @@ void learning(std::vector<Flashcard> cards)
             break;
         }
     }
-    
-     //Write to the json file
+
+     //Write to the json file.
     std::ofstream MyFileWrite ("flashcardsJSON.json");
 
     for(auto card : cards)
