@@ -76,17 +76,17 @@ class Flashcard {
         return isKnown;
     }
 
-
 };
 
 void learning(std::vector<Flashcard> cards);
+void matchingGame(std::vector<Flashcard> cards);
 
 int main() 
 {
     std::string line;
     std::vector<Flashcard> cards;
 
-    //Read from the text file
+    //Read from the imported text file.
     /* std::ifstream flashcards ("flashcards4.csv");
 
     while (getline (flashcards, line))
@@ -101,6 +101,8 @@ int main()
       cards.emplace_back(Flashcard(word, usage, translation));
     } */
 
+
+    //Read from json file.
     std::string fullFile;
     std::ifstream MyFileRead ("flashcardsJSON.json");
     while (getline (MyFileRead, line))
@@ -110,6 +112,7 @@ int main()
 
     MyFileRead.close ();
 
+    //Making a vector of cards
     bool working = true;
     while(working)
     {
@@ -124,20 +127,14 @@ int main()
         fullFile = fullFile.substr(position2 +1);
     }
 
-
     //shuffle cards
     /* auto rd = std::random_device {}; 
     auto rng = std::default_random_engine { rd() };
     std::shuffle(std::begin(cards), std::end(cards), rng); */
 
-    //std::cout << "Choose one of the following options: " << std::endl;
 
-    learning(cards);
-
-    
-
-
-    //std::cout << cards[0].serialize();
+    //learning(cards);
+    matchingGame(cards);
 
     return 0;
 }
@@ -155,6 +152,7 @@ std::string find(std::string sentence, std::string word)
     return sentence.substr(position1 + word.length() + 2, position2 - position1 - word.length() - 2);
 }
 
+//Flashcard learning function
 void learning(std::vector<Flashcard> cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
@@ -214,4 +212,67 @@ void learning(std::vector<Flashcard> cards)
     }
 
     MyFileWrite.close ();
+}
+
+std::string nLong(std::string input, int length)
+{
+    std::string temp = input;
+    
+    while (temp.length() < length)
+    {
+        temp += " ";
+    }
+    
+    return temp;
+}
+
+void matchingGame(std::vector<Flashcard> cards)
+{
+    std::cout << "******************************* Matching game *******************************" << std::endl << std::endl;
+
+    //Finding the longest word or translation
+
+    int maxLength = 0;
+
+    for(int x = 0; x < cards.size(); x++)
+    {
+        if(cards[x].word.length() > maxLength)
+        {
+            maxLength = cards[x].word.length();
+            //std::cout << cards[x].word << std::endl;
+        }
+    }
+
+    for(int x = 0; x < cards.size(); x++)
+    {
+        if(cards[x].translation.length() > maxLength)
+        {
+            maxLength = cards[x].translation.length();
+            //std::cout << cards[x].translation << std::endl;
+        }
+    }
+
+    maxLength++;
+    
+    std::string fourWords;
+    std::string fourTranslations;
+    int i = 0;
+    std::vector<int> fourNum;
+    srand(time(NULL));
+
+    while(i < 4)
+    {
+        int num = (rand() % 4);
+
+        if(std::find(fourNum.begin(), fourNum.end(), num) == fourNum.end())
+        {
+            fourNum.emplace_back(num);
+            fourWords += nLong(cards[i].word, maxLength);
+            fourTranslations += nLong(cards[fourNum[i]].translation, maxLength);
+            i += 1;
+        }  
+    }
+
+    std::cout << fourWords << std::endl;
+    std::cout << fourTranslations << std::endl;
 }
