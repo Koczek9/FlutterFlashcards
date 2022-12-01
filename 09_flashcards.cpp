@@ -244,69 +244,80 @@ void matchingGame(std::vector<Flashcard> cards)
     }
 
     maxLength++;
-    
-    std::string wordsToMatch;
-    std::string translationsToMatch;
-    int numberOfWords = 4;
-    int i = 0;
-    std::vector<int> indexOfWords;
-    std::vector<int> indexOfTranslations;
-    srand(time(NULL));
 
-    while(i < numberOfWords)
+    int numberOfIterations = 0;
+
+    while((numberOfIterations + 1) * 4 <= cards.size())
     {
-        int num = (rand() % numberOfWords);
-
-        if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), num) == indexOfTranslations.end())
-        {
-            indexOfTranslations.emplace_back(num);
-            indexOfWords.emplace_back(i);
-            i += 1;
-        }  
-    }
-
-    while(numberOfWords > 0)
-    {
-        i = 0;
-        wordsToMatch = "";
-        translationsToMatch = "";
+        std::string wordsToMatch;
+        std::string translationsToMatch;
+        int numberOfWords = 4;
+        int i = 0;
+        std::vector<int> indexOfWords;
+        std::vector<int> indexOfTranslations;
+        srand(time(NULL));
 
         while(i < numberOfWords)
         {
-            wordsToMatch += std::to_string(i+1) + ' ' + nLong(cards[indexOfWords[i]].word, maxLength);
-            translationsToMatch += std::string(1,'A'+i) + ' ' + nLong(cards[indexOfTranslations[i]].translation, maxLength);
-            i++;
+            int num = (rand() % numberOfWords);
+
+            if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), num) == indexOfTranslations.end())
+            {
+                indexOfTranslations.emplace_back(num);
+                indexOfWords.emplace_back(i);
+                i += 1;
+            }  
         }
 
-        std::cout << wordsToMatch << std::endl;
-        std::cout << translationsToMatch << std::endl << std::endl;
-
-        int numberInput;
-        char letterInput;
-
-        std::cin >> numberInput;
-        std::cin >> letterInput;
-
-        if(letterInput >= 'a')
+        while(numberOfWords > 0)
         {
-            letterInput = letterInput - 'a';
-        }
-        else
-        {
-            letterInput = letterInput - 'A';
+            i = 0;
+            wordsToMatch = "";
+            translationsToMatch = "";
+
+            while(i < numberOfWords)
+            {
+                wordsToMatch += std::to_string(i+1) + 
+                                ' ' + 
+                                nLong(cards[indexOfWords[i] + numberOfIterations * 4].word, maxLength);
+                translationsToMatch += std::string(1,'A'+i) + 
+                                        ' ' +
+                                        nLong(cards[indexOfTranslations[i] + numberOfIterations * 4].translation, maxLength);
+                i++;
+            }
+
+            std::cout << wordsToMatch << std::endl;
+            std::cout << translationsToMatch << std::endl << std::endl;
+
+            int numberInput;
+            char letterInput;
+
+            std::cin >> numberInput;
+            std::cin >> letterInput;
+
+            if(letterInput >= 'a')
+            {
+                letterInput = letterInput - 'a';
+            }
+            else
+            {
+                letterInput = letterInput - 'A';
+            }
+
+            if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
+            {
+                std::cout << "correct" << std::endl;
+                indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
+                indexOfTranslations.erase(indexOfTranslations.begin() + letterInput);
+
+                numberOfWords -= 1;
+            }
+            else
+            {
+                std::cout << "not correct" << std::endl;
+            }
         }
 
-        if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
-        {
-            std::cout << "correct" << std::endl;
-            indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
-            indexOfTranslations.erase(indexOfTranslations.begin() + letterInput);
-
-            numberOfWords -= 1;
-        }
-        else
-        {
-            std::cout << "not correct" << std::endl;
-        }
-    }
+        numberOfIterations += 1;
+    } 
 }
