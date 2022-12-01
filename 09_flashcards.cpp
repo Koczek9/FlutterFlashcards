@@ -101,8 +101,6 @@ int main()
       cards.emplace_back(Flashcard(word, usage, translation));
     } */
 
-
-    //Read from json file.
     std::string fullFile;
     std::ifstream MyFileRead ("flashcardsJSON.json");
     while (getline (MyFileRead, line))
@@ -112,7 +110,6 @@ int main()
 
     MyFileRead.close ();
 
-    //Making a vector of cards
     bool working = true;
     while(working)
     {
@@ -127,7 +124,6 @@ int main()
         fullFile = fullFile.substr(position2 +1);
     }
 
-    //shuffle cards
     /* auto rd = std::random_device {}; 
     auto rng = std::default_random_engine { rd() };
     std::shuffle(std::begin(cards), std::end(cards), rng); */
@@ -139,7 +135,6 @@ int main()
     return 0;
 }
 
-//Function that finds word keys in read file.
 std::string find(std::string sentence, std::string word)
 {   
     int position1 = sentence.find("<" + word + ">");
@@ -152,7 +147,6 @@ std::string find(std::string sentence, std::string word)
     return sentence.substr(position1 + word.length() + 2, position2 - position1 - word.length() - 2);
 }
 
-//Flashcard learning function
 void learning(std::vector<Flashcard> cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
@@ -228,9 +222,8 @@ std::string nLong(std::string input, int length)
 
 void matchingGame(std::vector<Flashcard> cards)
 {
-    std::cout << "******************************* Matching game *******************************" << std::endl << std::endl;
-
-    //Finding the longest word or translation
+    std::cout << "******************************* Matching game *******************************" << std::endl;
+    std::cout << "Please choose english word and its translation" << std::endl << std::endl;
 
     int maxLength = 0;
 
@@ -239,7 +232,6 @@ void matchingGame(std::vector<Flashcard> cards)
         if(cards[x].word.length() > maxLength)
         {
             maxLength = cards[x].word.length();
-            //std::cout << cards[x].word << std::endl;
         }
     }
 
@@ -248,31 +240,64 @@ void matchingGame(std::vector<Flashcard> cards)
         if(cards[x].translation.length() > maxLength)
         {
             maxLength = cards[x].translation.length();
-            //std::cout << cards[x].translation << std::endl;
+
         }
     }
 
     maxLength++;
     
-    std::string fourWords;
-    std::string fourTranslations;
+    std::string wordsToMatch;
+    std::string translationsToMatch;
+    int numberOfWords = 4;
     int i = 0;
-    std::vector<int> fourNum;
+    std::vector<int> numberOfPairs;
     srand(time(NULL));
 
-    while(i < 4)
+    while(i < numberOfWords)
     {
-        int num = (rand() % 4);
+        int num = (rand() % numberOfWords);
 
-        if(std::find(fourNum.begin(), fourNum.end(), num) == fourNum.end())
+        if(std::find(numberOfPairs.begin(), numberOfPairs.end(), num) == numberOfPairs.end())
         {
-            fourNum.emplace_back(num);
-            fourWords += nLong(cards[i].word, maxLength);
-            fourTranslations += nLong(cards[fourNum[i]].translation, maxLength);
+            numberOfPairs.emplace_back(num);
             i += 1;
         }  
     }
 
-    std::cout << fourWords << std::endl;
-    std::cout << fourTranslations << std::endl;
+    while(numberOfWords > 0)
+    {
+        i = 0;
+        wordsToMatch = "";
+        translationsToMatch = "";
+
+
+        while(i < 4)
+        {
+            wordsToMatch += std::to_string(i+1) + ' ' + nLong(cards[i].word, maxLength);
+            translationsToMatch += std::string(1,'A'+i) + ' ' + nLong(cards[numberOfPairs[i]].translation, maxLength);
+            i++;
+        }
+
+        std::cout << wordsToMatch << std::endl;
+        std::cout << translationsToMatch << std::endl << std::endl;
+
+        int numberInput;
+        char letterInput;
+
+        std::cin >> numberInput;
+        std::cin >> letterInput;
+
+        if(numberInput == numberOfPairs[letterInput - 'A'] + 1 || numberInput == numberOfPairs[letterInput - 'a'] + 1)
+        {
+            std::cout << "correct" << std::endl;
+            cards[numberInput - 1].word = "";
+            cards[numberInput - 1].translation = "";
+
+            numberOfWords -= 1;
+        }
+        else
+        {
+            std::cout << "not correct" << std::endl;
+        }
+    }
 }
