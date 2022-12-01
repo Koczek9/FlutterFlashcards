@@ -240,7 +240,6 @@ void matchingGame(std::vector<Flashcard> cards)
         if(cards[x].translation.length() > maxLength)
         {
             maxLength = cards[x].translation.length();
-
         }
     }
 
@@ -250,16 +249,18 @@ void matchingGame(std::vector<Flashcard> cards)
     std::string translationsToMatch;
     int numberOfWords = 4;
     int i = 0;
-    std::vector<int> numberOfPairs;
+    std::vector<int> indexOfWords;
+    std::vector<int> indexOfTranslations;
     srand(time(NULL));
 
     while(i < numberOfWords)
     {
         int num = (rand() % numberOfWords);
 
-        if(std::find(numberOfPairs.begin(), numberOfPairs.end(), num) == numberOfPairs.end())
+        if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), num) == indexOfTranslations.end())
         {
-            numberOfPairs.emplace_back(num);
+            indexOfTranslations.emplace_back(num);
+            indexOfWords.emplace_back(i);
             i += 1;
         }  
     }
@@ -270,11 +271,10 @@ void matchingGame(std::vector<Flashcard> cards)
         wordsToMatch = "";
         translationsToMatch = "";
 
-
-        while(i < 4)
+        while(i < numberOfWords)
         {
-            wordsToMatch += std::to_string(i+1) + ' ' + nLong(cards[i].word, maxLength);
-            translationsToMatch += std::string(1,'A'+i) + ' ' + nLong(cards[numberOfPairs[i]].translation, maxLength);
+            wordsToMatch += std::to_string(i+1) + ' ' + nLong(cards[indexOfWords[i]].word, maxLength);
+            translationsToMatch += std::string(1,'A'+i) + ' ' + nLong(cards[indexOfTranslations[i]].translation, maxLength);
             i++;
         }
 
@@ -287,11 +287,20 @@ void matchingGame(std::vector<Flashcard> cards)
         std::cin >> numberInput;
         std::cin >> letterInput;
 
-        if(numberInput == numberOfPairs[letterInput - 'A'] + 1 || numberInput == numberOfPairs[letterInput - 'a'] + 1)
+        if(letterInput >= 'a')
+        {
+            letterInput = letterInput - 'a';
+        }
+        else
+        {
+            letterInput = letterInput - 'A';
+        }
+
+        if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
         {
             std::cout << "correct" << std::endl;
-            cards[numberInput - 1].word = "";
-            cards[numberInput - 1].translation = "";
+            indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
+            indexOfTranslations.erase(indexOfTranslations.begin() + letterInput);
 
             numberOfWords -= 1;
         }
