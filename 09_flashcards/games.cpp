@@ -1,5 +1,12 @@
 #include "games.h"
 
+void shuffle(std::vector<Flashcard> &cards)
+{
+    auto rd = std::random_device {}; 
+    auto rng = std::default_random_engine { rd() };
+    std::shuffle(std::begin(cards), std::end(cards), rng);
+}
+
 void learning(std::vector<Flashcard> cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;

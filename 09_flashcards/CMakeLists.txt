@@ -4,7 +4,7 @@ project(MyExample01 LANGUAGES CXX)
 
 # This is the library Including the headers is not required, but is nice for
 # users
-add_library(simple_lib flashcard.cpp flashcard.h games.cpp games.h)
+add_library(simple_lib flashcard.cpp flashcard.h games.cpp games.h import_read.cpp import_read.h)
 
 # The above line *did not* set the includes - we need to We can also set ., and
 # it should be expanded to the current source dir
