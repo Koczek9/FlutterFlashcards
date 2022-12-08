@@ -101,8 +101,6 @@ void matchingGame(std::vector<Flashcard> cards)
 
     while((numberOfIterations + 1) * 4 <= cards.size())
     {
-        std::string wordsToMatch;
-        std::string translationsToMatch;
         int numberOfWords = 4;
         int i = 0;
         std::vector<int> indexOfWords;
@@ -124,22 +122,27 @@ void matchingGame(std::vector<Flashcard> cards)
         while(numberOfWords > 0)
         {
             i = 0;
-            wordsToMatch = "";
-            translationsToMatch = "";
+            std::string wordsToMatch = "";
+            std::string translationsToMatch = "";
 
             while(i < numberOfWords)
             {
-                wordsToMatch += std::to_string(i+1) + 
+                wordsToMatch = std::to_string(i+1) + 
                                 ' ' + 
                                 nLong(cards[indexOfWords[i] + numberOfIterations * 4].word, maxLength);
-                translationsToMatch += std::string(1,'A'+i) + 
+                translationsToMatch = std::string(1,'A'+i) + 
                                         ' ' +
-                                        nLong(cards[indexOfTranslations[i] + numberOfIterations * 4].translation, maxLength);
+                                        cards[indexOfTranslations[i] + numberOfIterations * 4].translation;
+
+                std::cout << wordsToMatch << translationsToMatch << std::endl;
+
                 i++;
             }
 
-            std::cout << wordsToMatch << std::endl;
-            std::cout << translationsToMatch << std::endl << std::endl;
+            std::cout << std::endl;
+
+            //std::cout << wordsToMatch << std::endl;
+            //std::cout << translationsToMatch << std::endl << std::endl;
 
             int numberInput;
             char letterInput;
@@ -158,7 +161,7 @@ void matchingGame(std::vector<Flashcard> cards)
 
             if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
             {
-                std::cout << "correct" << std::endl;
+                std::cout << std::endl << "correct" << std::endl << std::endl;
                 indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
                 indexOfTranslations.erase(indexOfTranslations.begin() + letterInput);
 
