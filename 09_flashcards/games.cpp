@@ -1,4 +1,5 @@
 #include "games.h"
+#include "import_read.h"
 
 void shuffle(std::vector<Flashcard> &cards)
 {
@@ -56,15 +57,7 @@ void learning(std::vector<Flashcard> cards)
             break;
         }
     }
-
-    std::ofstream MyFileWrite ("flashcardsXML.xml");
-
-    for(auto card : cards)
-    {
-        MyFileWrite << card.serialize();
-    }
-
-    MyFileWrite.close ();
+    writeXML(DATA_BASE_FILE_NAME, cards);
 }
 
 std::string nLong(std::string input, int length)

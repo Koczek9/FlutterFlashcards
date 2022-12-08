@@ -5,9 +5,10 @@
 int main() 
 {   
     std::vector<Flashcard> cards;
-    //cards = importFile("flashcards4.csv");
-    cards = readFile("../flashcardsXML.xml");
-    shuffle(cards);
+    //cards = importFile("dictionary.csv");
+    //writeXML(DATA_BASE_FILE_NAME, cards);
+    cards = readFile(DATA_BASE_FILE_NAME);
+    //shuffle(cards);
     //learning(cards);
     matchingGame(cards);
 

@@ -21,6 +21,18 @@ std::vector<Flashcard> importFile(std::string fileName)
     return cards;
 }
 
+void writeXML(std::string fileName, std::vector<Flashcard> cards)
+{
+    std::ofstream MyFileWrite (fileName);
+
+    for(auto card : cards)
+    {
+        MyFileWrite << card.serialize();
+    }
+
+    MyFileWrite.close ();
+}
+
 std::vector<Flashcard> readFile(std::string fileName)
 {
     std::vector<Flashcard> cards;
