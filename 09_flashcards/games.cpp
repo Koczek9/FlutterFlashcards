@@ -98,10 +98,11 @@ void matchingGame(std::vector<Flashcard> cards)
     maxLength++;
 
     int numberOfIterations = 0;
+    const int maxNumberOfWords = 6;
 
-    while((numberOfIterations + 1) * 4 <= cards.size())
+    while((numberOfIterations + 1) * maxNumberOfWords <= cards.size())
     {
-        int numberOfWords = 4;
+        int numberOfWords = maxNumberOfWords;
         int i = 0;
         std::vector<int> indexOfWords;
         std::vector<int> indexOfTranslations;
