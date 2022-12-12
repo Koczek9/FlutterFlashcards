@@ -87,14 +87,6 @@ void matchingGame(std::vector<Flashcard> cards)
         }
     }
 
-    for(int x = 0; x < cards.size(); x++)
-    {
-        if(cards[x].translation.length() > maxLength)
-        {
-            maxLength = cards[x].translation.length();
-        }
-    }
-
     maxLength++;
 
     int numberOfIterations = 0;
@@ -176,4 +168,62 @@ void matchingGame(std::vector<Flashcard> cards)
 
         numberOfIterations += 1;
     } 
+}
+
+void chooseTranslation(std::vector<Flashcard> cards)
+{
+    std::cout << "******************************* Choose translation game *******************************" << std::endl;
+     std::cout << "Please choose translation" << std::endl << std::endl;
+
+    int maxLength = 0;
+
+    for(int x = 0; x < cards.size(); x++)
+    {
+        if(cards[x].translation.length() > maxLength)
+        {
+            maxLength = cards[x].translation.length();
+        }
+    }
+    
+    const int numberOfTranslations = 4;
+    std::vector<int> indexOfTranslations;
+    int i = 0;
+    srand(time(NULL));
+
+    while(i < numberOfTranslations)
+    {
+        int indexNumber = (rand() % cards.size());
+        if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), indexNumber) == indexOfTranslations.end())
+        {
+            indexOfTranslations.emplace_back(indexNumber);
+            i++;
+        }
+    }
+
+    int indexNumberWord = (rand() % numberOfTranslations);
+
+    std::cout << cards[indexOfTranslations[indexNumberWord]].word << std::endl;
+    i = 0;
+    while(i < numberOfTranslations)
+    {
+        std::string translationsToChoose = std::to_string(i+1) + 
+                                ' ' +
+                                nLong(cards[indexOfTranslations[i]].translation, maxLength);
+        i++;
+        std::cout << translationsToChoose << std::endl; 
+    }
+
+    //std::cout << "q to quit" << std::endl;
+
+    int numberInput;
+    std::cin >> numberInput;
+
+    if((numberInput - 1) == indexNumberWord)
+    {
+        std::cout << "Correct";
+    }
+    else
+    {
+        std::cout << "It is not correct";
+    }
 }

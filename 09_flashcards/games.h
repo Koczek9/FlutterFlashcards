@@ -11,3 +11,4 @@
 void shuffle(std::vector<Flashcard> &cards);
 void learning(std::vector<Flashcard> cards);
 void matchingGame(std::vector<Flashcard> cards);
+void chooseTranslation(std::vector<Flashcard> cards);
