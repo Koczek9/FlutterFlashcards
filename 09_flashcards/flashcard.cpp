@@ -40,6 +40,7 @@ std::string Flashcard::serialize()
     serialize += "    <usage>" + usage + "</usage>\n";
     serialize += "    <translation>" + translation + "</translation>\n";
     serialize += "    <known>" + known + "</known>\n";
+    serialize += "    <levelOfKnowledge>" + std::to_string(levelOfKnowledge) + "</levelOfKnowledge>\n";
     serialize += "</Flashcard>\n";
     return serialize;
 }
@@ -50,6 +51,7 @@ void Flashcard::deserialize(std::string serialize)
     usage = findXml(serialize, "usage");
     translation = findXml(serialize, "translation");
     known = findXml(serialize, "known");
+    levelOfKnowledge = std::stoi(findXml(serialize, "levelOfKnowledge"));
 }
 
 void Flashcard::setKnown(bool isKnown)

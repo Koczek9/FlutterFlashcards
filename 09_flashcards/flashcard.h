@@ -11,6 +11,7 @@ class Flashcard {
     std::string word;
     std::string usage;
     std::string translation;
+    int levelOfKnowledge = 0;
 
     Flashcard(std::string word, std::string usage, std::string translation);
     Flashcard(std::string word, std::string usage);

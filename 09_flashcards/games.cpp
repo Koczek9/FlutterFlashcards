@@ -60,6 +60,14 @@ void learning(std::vector<Flashcard> cards)
     writeXML(DATA_BASE_FILE_NAME, cards);
 }
 
+/*
+* Appends word with spaces so it has desired length.
+*
+* @param[in] input   original word
+* @param[in] length  desired length
+*
+* @return new word with desired length
+*/
 std::string nLong(std::string input, int length)
 {
     std::string temp = input;
@@ -72,6 +80,10 @@ std::string nLong(std::string input, int length)
     return temp;
 }
 
+/*
+* Prints out four english words end four translations.
+* You need to find the pairs.
+*/
 void matchingGame(std::vector<Flashcard> cards)
 {
     std::cout << "******************************* Matching game *******************************" << std::endl;
@@ -128,14 +140,10 @@ void matchingGame(std::vector<Flashcard> cards)
                                         cards[indexOfTranslations[i] + numberOfIterations * 4].translation;
 
                 std::cout << wordsToMatch << translationsToMatch << std::endl;
-
                 i++;
             }
 
             std::cout << std::endl;
-
-            //std::cout << wordsToMatch << std::endl;
-            //std::cout << translationsToMatch << std::endl << std::endl;
 
             int numberInput;
             char letterInput;
@@ -170,6 +178,10 @@ void matchingGame(std::vector<Flashcard> cards)
     } 
 }
 
+/*
+* Prints out one english words that is not known yet and four translations.
+* You need to choose correct translation. After 5 correct guesses in a row marks word as known.
+*/
 void chooseTranslation(std::vector<Flashcard> cards)
 {
     std::cout << "******************************* Choose translation game *******************************" << std::endl;
@@ -186,44 +198,70 @@ void chooseTranslation(std::vector<Flashcard> cards)
     }
     
     const int numberOfTranslations = 4;
-    std::vector<int> indexOfTranslations;
-    int i = 0;
+    std::vector<Flashcard> cardsNotKnown;
     srand(time(NULL));
 
-    while(i < numberOfTranslations)
+    std::copy_if(cards.begin(), cards.end(), std::back_inserter(cardsNotKnown), [] (Flashcard card) {return card.getKnown() == 0; });
+
+    while(cardsNotKnown.size() >= numberOfTranslations)
     {
-        int indexNumber = (rand() % cards.size());
-        if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), indexNumber) == indexOfTranslations.end())
+        int i = 0;
+        std::vector<int> indexOfTranslations;
+        while(i < numberOfTranslations)
         {
-            indexOfTranslations.emplace_back(indexNumber);
+            int indexNumber = (rand() % cardsNotKnown.size());
+            if(std::find(indexOfTranslations.begin(), indexOfTranslations.end(), indexNumber) == indexOfTranslations.end())
+            {
+                indexOfTranslations.emplace_back(indexNumber);
+                i++;
+            }
+        }
+
+        int indexNumberWord = (rand() % numberOfTranslations);
+
+        std::cout << cardsNotKnown[indexOfTranslations[indexNumberWord]].word << std::endl;
+        i = 0;
+        while(i < numberOfTranslations)
+        {
+            std::string translationsToChoose = std::to_string(i+1) +
+                                    ' ' +
+                                    nLong(cardsNotKnown[indexOfTranslations[i]].translation, maxLength);
             i++;
+            std::cout << translationsToChoose << std::endl;
+        }
+
+        //std::cout << "q to quit" << std::endl;
+
+        int numberInput;
+        std::cin >> numberInput;
+
+        if((numberInput - 1) == indexNumberWord)
+        {
+            std::cout << "Correct" << std::endl;
+
+            auto itr = std::find_if(cards.begin(), cards.end(),
+                        [cardsNotKnown,indexOfTranslations,indexNumberWord] (Flashcard card)
+                        {return card.word == cardsNotKnown[indexOfTranslations[indexNumberWord]].word;});
+            auto index = itr - cards.begin();
+            cards[index].levelOfKnowledge += 1;
+
+            if(cards[index].levelOfKnowledge == 5)
+            {
+                cards[index].setKnown(true);
+                cardsNotKnown.erase(cardsNotKnown.begin() + indexOfTranslations[indexNumberWord]);
+            }
+        }
+        else
+        {
+            std::cout << "It is not correct" << std::endl;
+            std::cout << "Correct answer is " << cardsNotKnown[indexOfTranslations[indexNumberWord]].translation << std::endl;
+
+            auto index = std::find_if(cards.begin(), cards.end(),
+                        [cardsNotKnown,indexOfTranslations,indexNumberWord] (Flashcard card)
+                        {return card.word == cardsNotKnown[indexOfTranslations[indexNumberWord]].word;});
+            cards[index-cards.begin()].levelOfKnowledge = 0;
         }
     }
 
-    int indexNumberWord = (rand() % numberOfTranslations);
-
-    std::cout << cards[indexOfTranslations[indexNumberWord]].word << std::endl;
-    i = 0;
-    while(i < numberOfTranslations)
-    {
-        std::string translationsToChoose = std::to_string(i+1) + 
-                                ' ' +
-                                nLong(cards[indexOfTranslations[i]].translation, maxLength);
-        i++;
-        std::cout << translationsToChoose << std::endl; 
-    }
-
-    //std::cout << "q to quit" << std::endl;
-
-    int numberInput;
-    std::cin >> numberInput;
-
-    if((numberInput - 1) == indexNumberWord)
-    {
-        std::cout << "Correct";
-    }
-    else
-    {
-        std::cout << "It is not correct";
-    }
+    writeXML(DATA_BASE_FILE_NAME, cards);
 }

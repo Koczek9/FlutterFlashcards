@@ -5,6 +5,7 @@
 #include <fstream>
 #include <random>
 #include <ctime>
+#include <algorithm>
 
 #include "flashcard.h"
 
