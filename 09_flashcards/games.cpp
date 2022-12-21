@@ -334,3 +334,25 @@ void chooseTranslation(std::vector<Flashcard> cards)
 
     writeXML(DATA_BASE_FILE_NAME, cards);
 }
+
+void chooseGame (std::vector<Flashcard> cards)
+{
+    std::cout << "Choose one of the following " << std::endl;
+    std::cout << "1 Learning    " << "2 matching game   " << "3 choose translation game" << std::endl;
+
+    const int numberOfGames = 3;
+    int inputNumber = checkInput(numberOfGames);
+
+    switch(inputNumber)
+    {
+        case 0:
+            learning(cards);
+            break;
+        case 1:
+            matchingGame(cards);
+            break;
+        case 2:
+            chooseTranslation(cards);
+            break;
+    }
+}
