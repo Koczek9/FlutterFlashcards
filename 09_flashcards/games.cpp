@@ -91,33 +91,32 @@ void learning(std::vector<Flashcard> cards)
         
         std::cout << "1 see translation    2 see usage    3 already known   4 next word     Q quit"<< std::endl;
 
-        char choice;
-        std::cin >> choice;
+        const int numberOfVariations = 4;
+        int choice = checkInput(numberOfVariations);
         showWord = true;
 
         switch (choice)
         {
-        case '1':
-            std::cout << cards[i].translation << std::endl;
-            showWord = false;
-            break;
-        case '2':
-            std::cout << cards[i].usage << std::endl << std::endl;
-            showWord = false;
-            break;
-        case '3':
-            cards[i].setKnown(true);
-            i++;
-            break;
-        case '4':
-            i++;
-            break;
-        case 'q':
-        case 'Q':
-            i = cards.size();
-            break;
-        default:
-            break;
+            case 0:
+                std::cout << cards[i].translation << std::endl;
+                showWord = false;
+                break;
+            case 1:
+                std::cout << cards[i].usage << std::endl << std::endl;
+                showWord = false;
+                break;
+            case 2:
+                cards[i].setKnown(true);
+                i++;
+                break;
+            case 3:
+                i++;
+                break;
+            case QUIT_CODE:
+                i = cards.size();
+                break;
+            default:
+                break;
         }
     }
     writeXML(DATA_BASE_FILE_NAME, cards);

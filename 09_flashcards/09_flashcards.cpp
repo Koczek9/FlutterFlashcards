@@ -8,10 +8,7 @@ int main()
     //cards = importFile("dictionary.csv");
     //writeXML(DATA_BASE_FILE_NAME, cards);
     cards = readFile(DATA_BASE_FILE_NAME);
-    //shuffle(cards);
-    //learning(cards);
-    //matchingGame(cards);
-    //chooseTranslation(cards);
+    shuffle(cards);
     chooseGame(cards);
 
     return 0;
