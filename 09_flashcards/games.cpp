@@ -15,47 +15,26 @@ int checkInput(int maxInput, bool isInputANumber = true)
     int inputNumber;
     bool isValid = false;
 
-    if(isInputANumber)
+    while(!isValid)
     {
-        while(!isValid)
+        if(input[0] == 'q' || input[0] == 'Q')
         {
-            if(input[0] == 'q' || input[0] == 'Q')
-            {
-                return QUIT_CODE;
-            }
-
+            return QUIT_CODE;
+        }
+        
+        if(isInputANumber)
+        {
             try
             {
-                inputNumber = std::stoi(input);
+                inputNumber = std::stoi(input) - 1;
             }
             catch(std::invalid_argument)
             {
                 // Nothing to do as it is the same as int out of bound.
             }
-            if(inputNumber < 1 || inputNumber > maxInput)
-            {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Enter a number from 1 to " << maxInput << std::endl;
-                std::cin >> input;
-            }
-            else
-            {
-                isValid = true;
-            }
         }
-
-        return inputNumber;
-    }
-    else
-    {
-        while(!isValid)
+        else
         {
-            if(input[0] == 'q' || input[0] == 'Q')
-            {
-                return QUIT_CODE;
-            }
-
             if(input[0] >= 'a')
             {
                 inputNumber = input[0] - 'a';
@@ -64,23 +43,32 @@ int checkInput(int maxInput, bool isInputANumber = true)
             {
                 inputNumber = input[0] - 'A';
             }
+        }
 
-            if(inputNumber < 0 || inputNumber >= maxInput)
+        if(inputNumber < 0 || inputNumber >= maxInput)
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            
+            if(isInputANumber)
             {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                char maxLetter = 'A' + maxInput - 1;
-                std::cout << "Enter a letter from A to " << maxLetter << std::endl;
-                std::cin >> input;
+                std::cout << "Enter a number from 1 to " << maxInput << std::endl;
             }
             else
             {
-                isValid = true;
+                char maxLetter = 'A' + maxInput - 1;
+                std::cout << "Enter a letter from A to " << maxLetter << std::endl;
             }
+            
+            std::cin >> input;
         }
-
-        return inputNumber;
+        else
+        {
+            isValid = true;
+        }     
     }
+
+    return inputNumber;
 }
 
 void learning(std::vector<Flashcard> cards)
@@ -228,21 +216,21 @@ void matchingGame(std::vector<Flashcard> cards)
 
             std::cout << std::endl;
 
-            numberInput = checkInput(maxNumberOfWords, true);
+            numberInput = checkInput(numberOfWords, true);
             if(numberInput == QUIT_CODE)
             {
                 break;
             }
-            letterInput = checkInput(maxNumberOfWords, false);
+            letterInput = checkInput(numberOfWords, false);
 
             if(letterInput == QUIT_CODE)
             {
                 break;
             }
-            else if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
+            else if(indexOfWords[numberInput] == indexOfTranslations[letterInput])
             {
                 std::cout << std::endl << "correct" << std::endl << std::endl;
-                indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
+                indexOfWords.erase(indexOfWords.begin() + numberInput);
                 indexOfTranslations.erase(indexOfTranslations.begin() + letterInput);
 
                 numberOfWords -= 1;
@@ -316,7 +304,7 @@ void chooseTranslation(std::vector<Flashcard> cards)
         {
             break;
         }
-        else if(input -1 == indexNumberWord)
+        else if(input == indexNumberWord)
         {
             std::cout << "Correct" << std::endl;
 
