@@ -9,7 +9,10 @@
 
 #include "flashcard.h"
 
+#define QUIT_CODE -2
+
 void shuffle(std::vector<Flashcard> &cards);
+int checkInput(bool isInputANumber, int maxInput);
 void learning(std::vector<Flashcard> cards);
 void matchingGame(std::vector<Flashcard> cards);
 void chooseTranslation(std::vector<Flashcard> cards);

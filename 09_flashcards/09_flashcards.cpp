@@ -10,8 +10,8 @@ int main()
     cards = readFile(DATA_BASE_FILE_NAME);
     //shuffle(cards);
     //learning(cards);
-    //matchingGame(cards);
-    chooseTranslation(cards);
+    matchingGame(cards);
+    //chooseTranslation(cards);
 
     return 0;
 }

@@ -8,6 +8,81 @@ void shuffle(std::vector<Flashcard> &cards)
     std::shuffle(std::begin(cards), std::end(cards), rng);
 }
 
+int checkInput(int maxInput, bool isInputANumber = true)
+{
+    std::string input;
+    std::cin >> input;
+    int inputNumber;
+    bool isValid = false;
+
+    if(isInputANumber)
+    {
+        while(!isValid)
+        {
+            if(input[0] == 'q' || input[0] == 'Q')
+            {
+                return QUIT_CODE;
+            }
+
+            try
+            {
+                inputNumber = std::stoi(input);
+            }
+            catch(std::invalid_argument)
+            {
+                // Nothing to do as it is the same as int out of bound.
+            }
+            if(inputNumber < 1 || inputNumber > maxInput)
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Enter a number from 1 to " << maxInput << std::endl;
+                std::cin >> input;
+            }
+            else
+            {
+                isValid = true;
+            }
+        }
+
+        return inputNumber;
+    }
+    else
+    {
+        while(!isValid)
+        {
+            if(input[0] == 'q' || input[0] == 'Q')
+            {
+                return QUIT_CODE;
+            }
+
+            if(input[0] >= 'a')
+            {
+                inputNumber = input[0] - 'a';
+            }
+            else
+            {
+                inputNumber = input[0] - 'A';
+            }
+
+            if(inputNumber < 0 || inputNumber >= maxInput)
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                char maxLetter = 'A' + maxInput - 1;
+                std::cout << "Enter a letter from A to " << maxLetter << std::endl;
+                std::cin >> input;
+            }
+            else
+            {
+                isValid = true;
+            }
+        }
+
+        return inputNumber;
+    }
+}
+
 void learning(std::vector<Flashcard> cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
@@ -103,6 +178,9 @@ void matchingGame(std::vector<Flashcard> cards)
 
     int numberOfIterations = 0;
     const int maxNumberOfWords = 6;
+    int numberInput;
+    int letterInput;
+
 
     while((numberOfIterations + 1) * maxNumberOfWords <= cards.size())
     {
@@ -111,6 +189,11 @@ void matchingGame(std::vector<Flashcard> cards)
         std::vector<int> indexOfWords;
         std::vector<int> indexOfTranslations;
         srand(time(NULL));
+
+        if(numberInput == QUIT_CODE || letterInput == QUIT_CODE)
+        {
+            break;
+        }
 
         while(i < numberOfWords)
         {
@@ -145,22 +228,18 @@ void matchingGame(std::vector<Flashcard> cards)
 
             std::cout << std::endl;
 
-            int numberInput;
-            char letterInput;
-
-            std::cin >> numberInput;
-            std::cin >> letterInput;
-
-            if(letterInput >= 'a')
+            numberInput = checkInput(maxNumberOfWords, true);
+            if(numberInput == QUIT_CODE)
             {
-                letterInput = letterInput - 'a';
+                break;
             }
-            else
-            {
-                letterInput = letterInput - 'A';
-            }
+            letterInput = checkInput(maxNumberOfWords, false);
 
-            if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
+            if(letterInput == QUIT_CODE)
+            {
+                break;
+            }
+            else if(indexOfWords[numberInput -1] == indexOfTranslations[letterInput])
             {
                 std::cout << std::endl << "correct" << std::endl << std::endl;
                 indexOfWords.erase(indexOfWords.begin() + numberInput - 1);
@@ -198,6 +277,7 @@ void chooseTranslation(std::vector<Flashcard> cards)
     }
     
     const int numberOfTranslations = 4;
+    const int levelOfKnowledgeThreshold = 5;
     std::vector<Flashcard> cardsNotKnown;
     srand(time(NULL));
 
@@ -230,12 +310,13 @@ void chooseTranslation(std::vector<Flashcard> cards)
             std::cout << translationsToChoose << std::endl;
         }
 
-        //std::cout << "q to quit" << std::endl;
+        int input = checkInput(numberOfTranslations);
 
-        int numberInput;
-        std::cin >> numberInput;
-
-        if((numberInput - 1) == indexNumberWord)
+        if(input == QUIT_CODE)
+        {
+            break;
+        }
+        else if(input -1 == indexNumberWord)
         {
             std::cout << "Correct" << std::endl;
 
@@ -245,7 +326,7 @@ void chooseTranslation(std::vector<Flashcard> cards)
             auto index = itr - cards.begin();
             cards[index].levelOfKnowledge += 1;
 
-            if(cards[index].levelOfKnowledge == 5)
+            if(cards[index].levelOfKnowledge == levelOfKnowledgeThreshold)
             {
                 cards[index].setKnown(true);
                 cardsNotKnown.erase(cardsNotKnown.begin() + indexOfTranslations[indexNumberWord]);
