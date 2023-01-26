@@ -19,7 +19,7 @@ target_compile_definitions(simple_lib PRIVATE MYLIB_PRIVATE)
 target_compile_features(simple_lib PUBLIC cxx_std_11)
 
 # Now add the executable
-add_executable(simple_example 09_flashcards.cpp)
+add_executable(simple_example main.cpp)
 
 # Adding the all-important link to simple-lib
 target_link_libraries(simple_example PUBLIC simple_lib)
