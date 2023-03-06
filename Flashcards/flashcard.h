@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-std::string findXml(std::string sentence, std::string word);
+std::string findXml(const std::string& sentence, const std::string& word);
 
 class Flashcard {
     std::string known = "false";
@@ -13,12 +13,12 @@ class Flashcard {
     std::string translation;
     int levelOfKnowledge = 0;
 
-    Flashcard(std::string word, std::string usage, std::string translation);
-    Flashcard(std::string word, std::string usage);
-    Flashcard(std::string serializedItem);
+    Flashcard(std::string word, const std::string& usage, const std::string& translation);
+    Flashcard(std::string word, const std::string& usage);
+    Flashcard(const std::string& serializedItem);
 
-    std::string serialize();
-    void deserialize(std::string serialize);
+    std::string serialize() const;
+    void deserialize(const std::string& serialize);
     void setKnown(bool isKnown);
-    bool getKnown();
+    bool getKnown() const;
 };

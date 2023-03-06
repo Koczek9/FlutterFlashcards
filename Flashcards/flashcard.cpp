@@ -1,6 +1,6 @@
 #include "flashcard.h"
 
-std::string findXml(std::string sentence, std::string word)
+std::string findXml(const std::string& sentence, const std::string& word)
 {   
     int position1 = sentence.find("<" + word + ">");
     int position2 = sentence.find("</" + word + ">");
@@ -12,7 +12,7 @@ std::string findXml(std::string sentence, std::string word)
     return sentence.substr(position1 + word.length() + 2, position2 - position1 - word.length() - 2);
 }
 
-Flashcard::Flashcard(std::string word, std::string usage, std::string translation)
+Flashcard::Flashcard(std::string word, const std::string& usage, const std::string& translation)
 {
     int colon = word.find(':');
     word = word.substr(colon + 1);
@@ -22,17 +22,17 @@ Flashcard::Flashcard(std::string word, std::string usage, std::string translatio
     this->translation = translation;
 }
 
-Flashcard::Flashcard(std::string word, std::string usage) : Flashcard(word,usage, std::string())
+Flashcard::Flashcard(std::string word, const std::string& usage) : Flashcard(word,usage, std::string())
 {
 
 }
 
-Flashcard::Flashcard(std::string serializedItem)
+Flashcard::Flashcard(const std::string& serializedItem)
 {
     deserialize(serializedItem);
 }
 
-std::string Flashcard::serialize()
+std::string Flashcard::serialize() const
 {
     std::string serialize;
     serialize += "<Flashcard>\n";
@@ -45,7 +45,7 @@ std::string Flashcard::serialize()
     return serialize;
 }
 
-void Flashcard::deserialize(std::string serialize)
+void Flashcard::deserialize(const std::string& serialize)
 {
     word = findXml(serialize, "word");
     usage = findXml(serialize, "usage");
@@ -66,7 +66,7 @@ void Flashcard::setKnown(bool isKnown)
     }
 }
 
-bool Flashcard::getKnown()
+bool Flashcard::getKnown() const
 {
     bool isKnown = 0;
     if(known == "true")

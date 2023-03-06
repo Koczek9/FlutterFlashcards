@@ -8,7 +8,7 @@ void shuffle(std::vector<Flashcard> &cards)
     std::shuffle(std::begin(cards), std::end(cards), rng);
 }
 
-int checkInput(int maxInput, bool isInputANumber = true)
+int checkInput(const int maxInput, bool isInputANumber = true)
 {
     std::string input;
     std::cin >> input;
@@ -71,7 +71,7 @@ int checkInput(int maxInput, bool isInputANumber = true)
     return inputNumber;
 }
 
-void learning(std::vector<Flashcard> cards)
+void learning(std::vector<Flashcard>& cards)
 {   
     std::cout << "********************************* Learning *********************************" << std::endl << std::endl;
     
@@ -130,7 +130,7 @@ void learning(std::vector<Flashcard> cards)
 *
 * @return new word with desired length
 */
-std::string nLong(std::string input, int length)
+std::string nLong(const std::string& input,const int length)
 {
     std::string temp = input;
     
@@ -146,7 +146,7 @@ std::string nLong(std::string input, int length)
 * Prints out four english words end four translations.
 * You need to find the pairs.
 */
-void matchingGame(std::vector<Flashcard> cards)
+void matchingGame(std::vector<Flashcard>& cards)
 {
     std::cout << "******************************* Matching game *******************************" << std::endl;
     std::cout << "Please choose english word and its translation" << std::endl << std::endl;
@@ -248,7 +248,7 @@ void matchingGame(std::vector<Flashcard> cards)
 * Prints out one english words that is not known yet and four translations.
 * You need to choose correct translation. After 5 correct guesses in a row marks word as known.
 */
-void chooseTranslation(std::vector<Flashcard> cards)
+void chooseTranslation(std::vector<Flashcard>& cards)
 {
     std::cout << "******************************* Choose translation game *******************************" << std::endl;
      std::cout << "Please choose translation" << std::endl << std::endl;
@@ -334,7 +334,7 @@ void chooseTranslation(std::vector<Flashcard> cards)
     writeXML(DATA_BASE_FILE_NAME, cards);
 }
 
-void chooseGame (std::vector<Flashcard> cards)
+void chooseGame (std::vector<Flashcard>& cards)
 {
     std::cout << "Choose one of the following " << std::endl;
     std::cout << "1 Learning    " << "2 matching game   " << "3 choose translation game" << std::endl;

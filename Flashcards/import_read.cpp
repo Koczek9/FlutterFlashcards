@@ -1,6 +1,6 @@
 #include "import_read.h"
 
-std::vector<Flashcard> importFile(std::string fileName)
+std::vector<Flashcard> importFile(const std::string& fileName)
 {
     std::vector<Flashcard> cards;
     std::string line;
@@ -21,7 +21,7 @@ std::vector<Flashcard> importFile(std::string fileName)
     return cards;
 }
 
-void writeXML(std::string fileName, std::vector<Flashcard> cards)
+void writeXML(const std::string& fileName, const std::vector<Flashcard>& cards)
 {
     std::ofstream MyFileWrite (fileName);
 
@@ -33,7 +33,7 @@ void writeXML(std::string fileName, std::vector<Flashcard> cards)
     MyFileWrite.close ();
 }
 
-std::vector<Flashcard> readFile(std::string fileName)
+std::vector<Flashcard> readFile(const std::string& fileName)
 {
     std::vector<Flashcard> cards;
     std::string fullFile;
