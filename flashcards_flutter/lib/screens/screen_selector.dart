@@ -1,3 +1,5 @@
+import 'package:flashcards_flutter/screens/matching_game.dart';
+import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/widgets/learning.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
@@ -5,14 +7,9 @@ import 'package:flashcards_flutter/screens/select.dart';
 import 'package:flashcards_flutter/screens/settings.dart';
 import 'package:flashcards_flutter/screens/translation_game.dart';
 
-class ScreenSelector extends StatefulWidget {
+class ScreenSelector extends StatelessWidget {
   const ScreenSelector({super.key});
 
-  @override
-  State<ScreenSelector> createState() => _ScreenSelectorState();
-}
-
-class _ScreenSelectorState extends State<ScreenSelector> {
   static List<Flashcard> flashcards = [
     Flashcard(
       word: "foes",
@@ -48,62 +45,30 @@ class _ScreenSelectorState extends State<ScreenSelector> {
       translation: "migoczący",
     ),
   ];
-  Games currentGame = Games.select;
 
-  void pickGame(Games game) {
-    setState(() {
-      currentGame = game;
-    });
+  void selectGame(BuildContext context, Games game) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) {
+          if (game == Games.matching) {
+            return MatchingGame();
+          } else if (game == Games.translation) {
+            return TranslationGame(flashcards: flashcards);
+          } else if (game == Games.learning) {
+            return Learning(flashcards: flashcards);
+          }
+          return Text("Game not implemented");
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget screenWidget;
-    String title = "";
-
-    if (currentGame == Games.learning) {
-      screenWidget = Learning(flashcards: flashcards);
-      title = "Learning";
-    } else if (currentGame == Games.translation) {
-      screenWidget = TranslationGame(flashcards: flashcards);
-      title = "Choose translation";
-    } else if (currentGame == Games.settings) {
-      screenWidget = Settings();
-      title = "Settings";
-    } else if (currentGame == Games.matching) {
-      // Placeholder for matching game
-      screenWidget = Center(
-        child: Text("Matching game is not implemented yet."),
-      );
-      title = "Matching game";
-    } else {
-      screenWidget = Select(onGameSelected: pickGame);
-      title = "Flashcards";
-    }
-
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          backgroundColor: Colors.deepPurple.shade200,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                pickGame(Games.settings);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.home),
-              onPressed: () {
-                pickGame(Games.select);
-              },
-            ),
-          ],
-        ),
-        //backgroundColor: const Color.fromARGB(255, 77, 80, 152),
-        body: Container(
-          /*decoration: BoxDecoration(
+    return FlashcardScaffold(
+      title: "Flashcards",
+      body: Container(
+        /*decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 const Color.fromARGB(255, 5, 204, 61),
@@ -114,10 +79,9 @@ class _ScreenSelectorState extends State<ScreenSelector> {
             ),
           ),
           */
-          padding: const EdgeInsets.all(20),
-          alignment: Alignment.center,
-          child: screenWidget,
-        ),
+        padding: const EdgeInsets.all(20),
+        alignment: Alignment.center,
+        child: Select(onGameSelected: selectGame),
       ),
     );
   }

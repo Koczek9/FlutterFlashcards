@@ -13,7 +13,10 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Colors.deepPurple.shade200,
+      ),
       body: Center(
         child: SwitchListTile(
           title: const Text('Dark Mode'),

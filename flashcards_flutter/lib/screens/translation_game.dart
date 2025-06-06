@@ -1,3 +1,4 @@
+import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 import 'package:flashcards_flutter/widgets/answer_button.dart';
@@ -50,46 +51,49 @@ class _TranslationGameState extends State<TranslationGame> {
     }
     possibleAnswers.shuffle();
 
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
-        margin: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              correctAnswer.word,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
-            ),
+    return FlashcardScaffold(
+      title: 'Translation Game',
+      body: SizedBox(
+        width: double.infinity,
+        child: Container(
+          margin: const EdgeInsets.all(30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                correctAnswer.word,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24),
+              ),
 
-            ...possibleAnswers.map((flashcard) {
-              return AnswerButton(
-                answerText: flashcard.translation,
-                onTap: () {
-                  final bool isCorrect = flashcard == correctAnswer;
-                  widget.applyAnswer(isCorrect);
-                  if (!isCorrect) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Wrong! ${correctAnswer.word} = ${correctAnswer.translation}',
+              ...possibleAnswers.map((flashcard) {
+                return AnswerButton(
+                  answerText: flashcard.translation,
+                  onTap: () {
+                    final bool isCorrect = flashcard == correctAnswer;
+                    widget.applyAnswer(isCorrect);
+                    if (!isCorrect) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Wrong! ${correctAnswer.word} = ${correctAnswer.translation}',
+                          ),
+                          duration: const Duration(seconds: 3),
                         ),
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  setState(() {
-                    // Trigger a rebuild to show the next question
-                  });
-                },
-              );
-            }),
-            const SizedBox(height: 20),
-            Text("Score: ${widget.score}/${widget.attempts}"),
-          ],
+                    setState(() {
+                      // Trigger a rebuild to show the next question
+                    });
+                  },
+                );
+              }),
+              const SizedBox(height: 20),
+              Text("Score: ${widget.score}/${widget.attempts}"),
+            ],
+          ),
         ),
       ),
     );
