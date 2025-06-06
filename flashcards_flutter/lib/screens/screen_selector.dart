@@ -1,7 +1,7 @@
 import 'package:flashcards_flutter/screens/matching_game.dart';
 import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:flashcards_flutter/widgets/learning.dart';
+import 'package:flashcards_flutter/screens/learning.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 import 'package:flashcards_flutter/screens/select.dart';
 import 'package:flashcards_flutter/screens/settings_screen.dart';

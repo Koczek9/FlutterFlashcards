@@ -1,6 +1,7 @@
 import 'package:flashcards_flutter/screens/learning_stateless.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
+import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 
 class Learning extends StatefulWidget {
   Learning({super.key, required this.flashcards});
@@ -26,9 +27,32 @@ class _LearningState extends State<Learning> {
 
   @override
   Widget build(BuildContext context) {
-    return LearningStateless(
-      flashcard: widget.flashcard,
-      onNextPressed: nextFlashcard,
+    return FlashcardScaffold(
+      title: 'Learning',
+      body: Column(
+        children: [
+          LearningStateless(
+            flashcard: widget.flashcard,
+            onNextPressed: nextFlashcard,
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Learning progress: ${widget.currentIndex + 1} / ${widget.flashcards.length}',
+          ),
+          Slider(
+            value: widget.currentIndex.toDouble(),
+            onChanged: (value) {
+              setState(() {
+                widget.currentIndex = value.toInt();
+              });
+            },
+            min: 0,
+            max: widget.flashcards.length - 1,
+            //divisions: 8,
+          ),
+          SizedBox(height: 40),
+        ],
+      ),
     );
   }
 }

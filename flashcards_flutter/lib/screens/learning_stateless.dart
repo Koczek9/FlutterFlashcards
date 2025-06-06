@@ -1,4 +1,3 @@
-import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 
@@ -20,9 +19,8 @@ class LearningStateless extends StatelessWidget {
         MediaQuery.paddingOf(context).top +
         MediaQuery.paddingOf(context).bottom;
 
-    return FlashcardScaffold(
-      title: 'Learning',
-      body: Column(
+    return Expanded(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: height / 6),
@@ -69,7 +67,6 @@ class LearningStateless extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: height / 15),
         ],
       ),
     );
