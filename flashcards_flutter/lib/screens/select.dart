@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum Games { learning, matching, translation, select, settings }
+enum Games { learning, matching, translation }
 
 class Select extends StatelessWidget {
   const Select({super.key, required this.onGameSelected});
