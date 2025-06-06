@@ -2,9 +2,11 @@ import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 import 'package:flashcards_flutter/widgets/answer_button.dart';
+import 'package:flashcards_flutter/providers/settings_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 
-class TranslationGame extends StatefulWidget {
+class TranslationGame extends ConsumerStatefulWidget {
   TranslationGame({super.key, required this.flashcards});
   final List<Flashcard> flashcards;
   final Random random = Random();
@@ -25,13 +27,14 @@ class TranslationGame extends StatefulWidget {
   }
 
   @override
-  State<TranslationGame> createState() => _TranslationGameState();
+  ConsumerState<TranslationGame> createState() => _TranslationGameState();
 }
 
-class _TranslationGameState extends State<TranslationGame> {
+class _TranslationGameState extends ConsumerState<TranslationGame> {
   @override
   Widget build(BuildContext context) {
-    final int optionCount = 4;
+    final currentSettings = ref.watch(settingsProvider);
+    final int optionCount = currentSettings.translationOptionsCount;
     if (widget.flashcards.isEmpty || widget.flashcards.length < optionCount) {
       return Center(
         child: Text(
