@@ -1,3 +1,4 @@
+import 'package:flashcards_flutter/providers/flashcards_provider.dart';
 import 'package:flashcards_flutter/widgets/flashcard_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
@@ -7,13 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 
 class TranslationGame extends ConsumerStatefulWidget {
-  TranslationGame({super.key, required this.flashcards});
-  final List<Flashcard> flashcards;
+  TranslationGame({super.key});
   final Random random = Random();
-
-  Flashcard get randomCard {
-    return flashcards[random.nextInt(flashcards.length)];
-  }
 
   int score = 0;
   int attempts = 0;
@@ -35,22 +31,26 @@ class _TranslationGameState extends ConsumerState<TranslationGame> {
   Widget build(BuildContext context) {
     final currentSettings = ref.watch(settingsProvider);
     final int optionCount = currentSettings.translationOptionsCount;
-    if (widget.flashcards.isEmpty || widget.flashcards.length < optionCount) {
+    final flashcards = ref.watch(flashcardsProvider);
+
+    if (flashcards.isEmpty || flashcards.length < optionCount) {
       return FlashcardScaffold(
         title: 'Translation Game',
         body: Center(
           child: Text(
-            'Flashcards count ${widget.flashcards.length} is too low for this game. Minimum required: ${optionCount + 1}. You can change this in settings.',
+            'Flashcards count ${flashcards.length} is too low for this game. Minimum required: ${optionCount + 1}. You can change this in settings.',
             style: TextStyle(fontSize: 24, color: Colors.red),
           ),
         ),
       );
     }
-    final Flashcard correctAnswer = widget.randomCard;
+    final Flashcard correctAnswer = ref
+        .read(flashcardsProvider.notifier)
+        .randomCard;
     List<Flashcard> possibleAnswers = [correctAnswer];
 
     while (possibleAnswers.length < optionCount) {
-      final Flashcard answer = widget.randomCard;
+      final Flashcard answer = ref.read(flashcardsProvider.notifier).randomCard;
       if (!possibleAnswers.contains(answer)) {
         possibleAnswers.add(answer);
       }

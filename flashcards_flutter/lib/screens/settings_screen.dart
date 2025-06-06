@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/providers/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flashcards_flutter/providers/flashcards_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -8,6 +9,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSettings = ref.watch(settingsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -54,6 +56,13 @@ class SettingsScreen extends ConsumerWidget {
               divisions: 8,
               label:
                   'Learning Options Count: ${currentSettings.matchingOptionsCount}',
+            ),
+            SizedBox(height: 80),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(flashcardsProvider.notifier).importDefaultFlashcards();
+              },
+              child: const Text('Import default Flashcards file'),
             ),
           ],
         ),
