@@ -1,4 +1,4 @@
-import 'package:flashcards_flutter/widgets/learning_stateless.dart';
+import 'package:flashcards_flutter/screens/learning_stateless.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 

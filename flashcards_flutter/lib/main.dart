@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flashcards_flutter/widgets/screen_selector.dart';
+import 'package:flashcards_flutter/screens/screen_selector.dart';
 import 'package:flutter/services.dart';
 
 void main() {
