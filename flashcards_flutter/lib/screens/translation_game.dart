@@ -36,10 +36,13 @@ class _TranslationGameState extends ConsumerState<TranslationGame> {
     final currentSettings = ref.watch(settingsProvider);
     final int optionCount = currentSettings.translationOptionsCount;
     if (widget.flashcards.isEmpty || widget.flashcards.length < optionCount) {
-      return Center(
-        child: Text(
-          'Flashcards count is too low for this game.',
-          style: TextStyle(fontSize: 24, color: Colors.red),
+      return FlashcardScaffold(
+        title: 'Translation Game',
+        body: Center(
+          child: Text(
+            'Flashcards count ${widget.flashcards.length} is too low for this game. Minimum required: ${optionCount + 1}. You can change this in settings.',
+            style: TextStyle(fontSize: 24, color: Colors.red),
+          ),
         ),
       );
     }
