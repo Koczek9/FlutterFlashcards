@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/widgets/learning.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 import 'package:flashcards_flutter/screens/select.dart';
-import 'package:flashcards_flutter/screens/settings.dart';
+import 'package:flashcards_flutter/screens/settings_screen.dart';
 import 'package:flashcards_flutter/screens/translation_game.dart';
 
 class ScreenSelector extends StatelessWidget {

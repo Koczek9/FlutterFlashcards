@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flashcards_flutter/screens/settings.dart';
+import 'package:flashcards_flutter/screens/settings_screen.dart';
 
 class FlashcardScaffold extends StatelessWidget {
   const FlashcardScaffold({super.key, required this.title, required this.body});
@@ -8,7 +8,9 @@ class FlashcardScaffold extends StatelessWidget {
   final Widget body;
 
   void _openSettings(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Settings()));
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (ctx) => SettingsScreen()));
   }
 
   @override
