@@ -120,6 +120,21 @@ class FlashcardsProvider extends StateNotifier<List<Flashcard>> {
   Flashcard get randomCard {
     return flashcards[_random.nextInt(flashcards.length)];
   }
+
+  List<Flashcard> randomCards(int count) {
+    List<Flashcard> selectedCards = [];
+    if (count > flashcards.length) {
+      return selectedCards;
+    }
+
+    while (selectedCards.length < count) {
+      Flashcard card = randomCard;
+      if (!selectedCards.contains(card)) {
+        selectedCards.add(card);
+      }
+    }
+    return selectedCards;
+  }
 }
 
 final flashcardsProvider =

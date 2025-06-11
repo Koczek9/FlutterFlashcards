@@ -44,17 +44,12 @@ class _TranslationGameState extends ConsumerState<TranslationGame> {
         ),
       );
     }
-    final Flashcard correctAnswer = ref
-        .read(flashcardsProvider.notifier)
-        .randomCard;
-    List<Flashcard> possibleAnswers = [correctAnswer];
 
-    while (possibleAnswers.length < optionCount) {
-      final Flashcard answer = ref.read(flashcardsProvider.notifier).randomCard;
-      if (!possibleAnswers.contains(answer)) {
-        possibleAnswers.add(answer);
-      }
-    }
+    List<Flashcard> possibleAnswers = ref
+        .read(flashcardsProvider.notifier)
+        .randomCards(optionCount);
+
+    final Flashcard correctAnswer = possibleAnswers.first;
     possibleAnswers.shuffle();
 
     return FlashcardScaffold(
