@@ -4,25 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/screens/learning.dart';
 import 'package:flashcards_flutter/screens/select.dart';
 import 'package:flashcards_flutter/screens/translation_game.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flashcards_flutter/providers/flashcards_provider.dart';
 
-class ScreenSelector extends StatelessWidget {
+class ScreenSelector extends ConsumerStatefulWidget {
   const ScreenSelector({super.key});
 
-  void selectGame(BuildContext context, Games game) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) {
-          if (game == Games.matching) {
-            return MatchingGame();
-          } else if (game == Games.translation) {
-            return TranslationGame();
-          } else if (game == Games.learning) {
-            return Learning();
-          }
-          return Text("Game not implemented");
-        },
-      ),
-    );
+  @override
+  ConsumerState<ScreenSelector> createState() => _ScreenSelectorState();
+}
+
+void selectGame(BuildContext context, Games game) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (ctx) {
+        if (game == Games.matching) {
+          return MatchingGame();
+        } else if (game == Games.translation) {
+          return TranslationGame();
+        } else if (game == Games.learning) {
+          return Learning();
+        }
+        return Text("Game not implemented");
+      },
+    ),
+  );
+}
+
+class _ScreenSelectorState extends ConsumerState<ScreenSelector> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(flashcardsProvider.notifier).readFromFile();
   }
 
   @override
