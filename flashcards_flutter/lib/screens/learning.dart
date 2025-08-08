@@ -15,14 +15,20 @@ class Learning extends ConsumerStatefulWidget {
 class _LearningState extends ConsumerState<Learning> {
   @override
   Widget build(BuildContext context) {
-    final flashcards = ref.watch(flashcardsProvider);
+    var flashcards = ref.watch(flashcardsProvider.notifier).currentRandomCards;
+    final titleString = flashcards.isEmpty ? "Learning" : "Edit Flashcards";
+
+    if (flashcards.isEmpty) {
+      flashcards = ref.watch(flashcardsProvider);
+    }
 
     if (flashcards.isEmpty) {
       return FlashcardScaffold(
-        title: 'Learning',
+        title: titleString,
+        editVisible: false,
         body: Center(
           child: Text(
-            'No flashcards available. Please add some flashcards to start learning.',
+            'No flashcards available. Please add some flashcards to start.',
             style: TextStyle(fontSize: 24, color: Colors.red),
           ),
         ),
@@ -30,7 +36,8 @@ class _LearningState extends ConsumerState<Learning> {
     }
 
     return FlashcardScaffold(
-      title: 'Learning',
+      title: titleString,
+      editVisible: false,
       body: Column(
         children: [
           LearningStateless(
@@ -43,9 +50,7 @@ class _LearningState extends ConsumerState<Learning> {
             },
           ),
           SizedBox(height: 20),
-          Text(
-            'Learning progress: ${widget.currentIndex + 1} / ${flashcards.length}',
-          ),
+          Text('Progress: ${widget.currentIndex + 1} / ${flashcards.length}'),
           Slider(
             value: widget.currentIndex.toDouble(),
             onChanged: (value) {

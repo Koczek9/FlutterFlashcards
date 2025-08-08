@@ -14,24 +14,25 @@ class ScreenSelector extends ConsumerStatefulWidget {
   ConsumerState<ScreenSelector> createState() => _ScreenSelectorState();
 }
 
-void selectGame(BuildContext context, Games game) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (ctx) {
-        if (game == Games.matching) {
-          return MatchingGame();
-        } else if (game == Games.translation) {
-          return TranslationGame();
-        } else if (game == Games.learning) {
-          return Learning();
-        }
-        return Text("Game not implemented");
-      },
-    ),
-  );
-}
-
 class _ScreenSelectorState extends ConsumerState<ScreenSelector> {
+  void selectGame(BuildContext context, Games game) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) {
+          if (game == Games.matching) {
+            return MatchingGame();
+          } else if (game == Games.translation) {
+            return TranslationGame();
+          } else if (game == Games.learning) {
+            ref.read(flashcardsProvider.notifier).resetCurrentRandomCards();
+            return Learning();
+          }
+          return Text("Game not implemented");
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +43,7 @@ class _ScreenSelectorState extends ConsumerState<ScreenSelector> {
   Widget build(BuildContext context) {
     return FlashcardScaffold(
       title: "Flashcards",
+      editVisible: false,
       body: Container(
         /*decoration: BoxDecoration(
             gradient: LinearGradient(

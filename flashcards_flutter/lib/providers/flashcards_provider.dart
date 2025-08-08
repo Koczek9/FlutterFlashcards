@@ -116,6 +116,15 @@ class FlashcardsProvider extends StateNotifier<List<Flashcard>> {
   }
 
   List<Flashcard> get flashcards => state;
+  List<Flashcard> _currentRandomCards = [];
+
+  List<Flashcard> get currentRandomCards {
+    return _currentRandomCards;
+  }
+
+  void resetCurrentRandomCards() {
+    _currentRandomCards = [];
+  }
 
   Flashcard get randomCard {
     return flashcards[_random.nextInt(flashcards.length)];
@@ -133,6 +142,7 @@ class FlashcardsProvider extends StateNotifier<List<Flashcard>> {
         selectedCards.add(card);
       }
     }
+    _currentRandomCards = selectedCards;
     return selectedCards;
   }
 }
