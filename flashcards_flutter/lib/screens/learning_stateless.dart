@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
 
 class LearningStateless extends StatelessWidget {
-  const LearningStateless({
+  LearningStateless({
     super.key,
     required this.flashcard,
     required this.onNextPressed,
@@ -10,9 +10,14 @@ class LearningStateless extends StatelessWidget {
 
   final Flashcard flashcard;
   final void Function() onNextPressed;
+  final bool editingMode = true;
 
   @override
   Widget build(BuildContext context) {
+    final overrideTranslationController = TextEditingController(
+      text: flashcard.translation,
+    );
+
     const double boxHeight = 40;
     double height = MediaQuery.sizeOf(context).height;
     height -=
@@ -37,19 +42,34 @@ class LearningStateless extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            constraints: BoxConstraints(
-              minWidth: double.infinity,
-              minHeight: boxHeight,
+          if (!editingMode)
+            Container(
+              constraints: BoxConstraints(
+                minWidth: double.infinity,
+                minHeight: boxHeight,
+              ),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: Colors.deepPurple.shade200),
+              child: Text(
+                flashcard.translation,
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
             ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(color: Colors.deepPurple.shade200),
-            child: Text(
-              flashcard.translation,
-              style: TextStyle(fontSize: 18),
+          if (editingMode)
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Override translation',
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(),
+                fillColor: Colors.deepPurple.shade200,
+                filled: true,
+              ),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              controller: overrideTranslationController,
             ),
-          ),
+
           SizedBox(height: 10),
           Text(flashcard.usage, style: TextStyle(fontSize: 16)),
           Spacer(),
@@ -65,6 +85,26 @@ class LearningStateless extends StatelessWidget {
                 onPressed: () => onNextPressed(),
                 child: Text('Next'),
               ),
+              Spacer(),
+              if (editingMode)
+                ElevatedButton(
+                  onPressed: () {
+                    String overrideTranslationCandidate =
+                        overrideTranslationController.text.trim().toLowerCase();
+                    if (overrideTranslationCandidate.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Translation cannot be empty!'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      return;
+                    }
+                    flashcard.translation = overrideTranslationCandidate;
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: Text("Save"),
+                ),
             ],
           ),
         ],
