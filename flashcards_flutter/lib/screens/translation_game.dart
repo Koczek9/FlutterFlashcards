@@ -47,7 +47,7 @@ class _TranslationGameState extends ConsumerState<TranslationGame> {
 
     List<Flashcard> possibleAnswers = ref
         .read(flashcardsProvider.notifier)
-        .randomCards(optionCount);
+        .randomCards(optionCount, skipKnown: currentSettings.skipKnown);
 
     final Flashcard correctAnswer = possibleAnswers.first;
     possibleAnswers.shuffle();

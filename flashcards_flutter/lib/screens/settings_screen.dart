@@ -55,13 +55,12 @@ class SettingsScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SwitchListTile(
-              title: const Text('Skip known (not yet implemented)'),
+              title: const Text('Skip known'),
               value: currentSettings.skipKnown,
               onChanged: (bool value) {
                 ref
                     .read(settingsProvider.notifier)
                     .setSettings(skipKnown: value);
-                // Here you could also apply the theme change globally
               },
             ),
             Text("Translation game options count:"),

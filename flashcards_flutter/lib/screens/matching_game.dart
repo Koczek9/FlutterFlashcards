@@ -80,7 +80,7 @@ class _MatchingGameState extends ConsumerState<MatchingGame> {
       // or someone increased the option count while in game
       List<Flashcard> possibleAnswers = ref
           .read(flashcardsProvider.notifier)
-          .randomCards(optionCount);
+          .randomCards(optionCount, skipKnown: currentSettings.skipKnown);
 
       widget.words = possibleAnswers
           .map(

@@ -48,6 +48,16 @@ class _LearningState extends ConsumerState<Learning> {
                     (widget.currentIndex + 1) % flashcards.length;
               });
             },
+            onPreviousPressed: () {
+              setState(() {
+                widget.currentIndex =
+                    (widget.currentIndex - 1 + flashcards.length) %
+                    flashcards.length;
+              });
+            },
+            onSavePressed: () {
+              ref.watch(flashcardsProvider.notifier).saveToFile();
+            },
           ),
           SizedBox(height: 20),
           Text('Progress: ${widget.currentIndex + 1} / ${flashcards.length}'),

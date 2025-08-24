@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/models/flashcard.dart';
+import 'package:flashcards_flutter/widgets/known_button.dart';
 
 class LearningStateless extends StatelessWidget {
   LearningStateless({
     super.key,
     required this.flashcard,
     required this.onNextPressed,
+    required this.onPreviousPressed,
+    required this.onSavePressed,
   });
 
   final Flashcard flashcard;
   final void Function() onNextPressed;
+  final void Function() onPreviousPressed;
+  final void Function() onSavePressed;
   final bool editingMode = true;
 
   @override
@@ -73,13 +78,12 @@ class LearningStateless extends StatelessWidget {
           SizedBox(height: 10),
           Text(flashcard.usage, style: TextStyle(fontSize: 16)),
           Spacer(),
+          KnownButton(flashcard: flashcard),
           Row(
             children: [
               ElevatedButton(
-                onPressed: () {
-                  flashcard.known = true;
-                },
-                child: Text("Known"),
+                onPressed: () => onPreviousPressed(),
+                child: Text("Previous"),
               ),
               ElevatedButton(
                 onPressed: () => onNextPressed(),
@@ -102,6 +106,7 @@ class LearningStateless extends StatelessWidget {
                     }
                     flashcard.translation = overrideTranslationCandidate;
                     FocusScope.of(context).unfocus();
+                    onSavePressed();
                   },
                   child: Text("Save"),
                 ),
