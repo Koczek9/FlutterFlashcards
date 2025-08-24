@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flashcards_flutter/providers/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flashcards_flutter/providers/flashcards_provider.dart';
+import 'package:file_picker/file_picker.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -9,6 +10,40 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSettings = ref.watch(settingsProvider);
+
+    void _importFlashcardsFromFile() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xml', 'db'],
+      );
+      if (result != null) {
+        if (result.files.first.extension == "db") {
+          // pop up with message
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Database File Selected'),
+                content: const Text('Please use python importer first'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          ref
+              .read(flashcardsProvider.notifier)
+              .importFlashcardsFromFile(result.files.first.path!);
+        }
+        // Process the selected file
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -63,6 +98,11 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(flashcardsProvider.notifier).importDefaultFlashcards();
               },
               child: const Text('Import default Flashcards file'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () => _importFlashcardsFromFile(),
+              child: const Text('Import Flashcards from file'),
             ),
           ],
         ),

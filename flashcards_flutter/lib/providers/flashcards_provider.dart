@@ -35,6 +35,17 @@ class FlashcardsProvider extends StateNotifier<List<Flashcard>> {
     saveToFile();
   }
 
+  void importFlashcardsFromFile(String filePath) async {
+    final file = File(filePath);
+    if (!file.existsSync()) {
+      print('Flashcards file does not exist at ${file.path}.');
+      return;
+    }
+    var xmlString = await file.readAsString();
+    parseFlashcardsXml(xmlString);
+    saveToFile();
+  }
+
   void readFromFile() async {
     final file = File(await _flashcardsPath);
     if (!file.existsSync()) {
