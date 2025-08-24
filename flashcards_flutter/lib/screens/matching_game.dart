@@ -26,14 +26,14 @@ class _MatchingGameState extends ConsumerState<MatchingGame> {
   }
 
   void setClicked(MatchingElement element) {
-    // Select the clicked element and reset others
+    // Toggle the clicked element (so you can deselect) and reset others
     List<MatchingElement> elements = element.type == MatchingElementType.word
         ? widget.words!
         : widget.translations!;
 
     for (var e in elements) {
       if (e.name == element.name) {
-        e.isClicked = true;
+        e.isClicked = !e.isClicked;
       } else {
         e.isClicked = false;
       }
@@ -73,7 +73,11 @@ class _MatchingGameState extends ConsumerState<MatchingGame> {
 
     if (widget.words == null ||
         widget.words!.isEmpty ||
-        widget.words!.every((test) => test.isVanished == true)) {
+        widget.words!.every((test) => test.isVanished == true) ||
+        widget.words!.length != optionCount) {
+      // When no words found
+      // or all words vanished
+      // or someone increased the option count while in game
       List<Flashcard> possibleAnswers = ref
           .read(flashcardsProvider.notifier)
           .randomCards(optionCount);
