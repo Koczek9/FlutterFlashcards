@@ -141,16 +141,20 @@ class FlashcardsProvider extends StateNotifier<List<Flashcard>> {
     List<Flashcard> selectedCards = [];
     List<Flashcard> possibleCards = [];
 
+    // use deep copy not to loose cards when popping them out
     if (skipKnown) {
-      possibleCards = flashcards.where((e) => e.known == false).toList();
+      possibleCards = List.from(
+        flashcards.where((e) => e.known == false).toList(),
+      );
     } else {
-      possibleCards = flashcards;
+      possibleCards = List.from(flashcards);
     }
 
     if (count > possibleCards.length) {
       return selectedCards;
     }
 
+    // pop the card out, to aviod repetition
     while (selectedCards.length < count) {
       int number = _random.nextInt(possibleCards.length);
       selectedCards.add(possibleCards[number]);
